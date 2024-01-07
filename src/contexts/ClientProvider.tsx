@@ -98,6 +98,7 @@ function ClientProvider({ children }: TProps) {
     const properNavigate = () => {
       console.log("Called");
       if (!loggedInUser) {
+        queryClient.removeQueries();
         navigate({ to: "/auth/login" });
       } else {
         navigate({ to: loggedInUser.role });
