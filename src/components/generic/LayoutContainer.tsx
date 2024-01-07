@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { navbarHeight } from "../panel/Navbar";
 
 type TProps = {
-  title: string;
+  title?: string;
   description?: string;
   children: React.ReactNode;
 };
