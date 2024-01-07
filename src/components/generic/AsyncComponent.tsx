@@ -17,7 +17,7 @@ function AsyncComponent({ isLoading, isError, error, children }: TProps) {
     return (
       <Box className="legacy-center">
         <Typography>
-          Error occured.{error && `details: ${error.message}`}
+          Error occured.{error && ` Details: ${error.message}`}
         </Typography>
       </Box>
     );
