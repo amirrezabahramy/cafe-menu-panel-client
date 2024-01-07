@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { navbarHeight } from "../panel/Navbar";
+import OverflowContainer from "./OverflowContainer";
 
 type TProps = {
   title?: string;
@@ -41,7 +42,7 @@ function LayoutContainer({ title, description, children }: TProps) {
           )}
         </Stack>
       )}
-      {children}
+      <OverflowContainer>{children}</OverflowContainer>
     </Box>
   );
 }
