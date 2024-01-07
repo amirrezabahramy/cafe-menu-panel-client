@@ -1,8 +1,8 @@
 import { Box, Paper } from "@mui/material";
 import { sidebarWidth } from "./sidebar/Sidebar";
 import { navbarHeight } from "./Navbar";
-import LazyOutlet from "../generic/LazyOutlet";
 import { panelDefaultOpacity } from "./Panel";
+import { Outlet } from "@tanstack/react-router";
 
 function Content() {
   return (
@@ -35,7 +35,7 @@ function Content() {
         }}
         component={Paper}
       >
-        <LazyOutlet />
+        <Outlet />
       </Box>
     </Box>
   );
