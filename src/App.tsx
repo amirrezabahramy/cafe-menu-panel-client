@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import ThemeProvider from "./contexts/ThemeProvider";
+import LocalConfigProvider from "./contexts/LocalConfigProvider";
+import SnackbarProvider from "./contexts/SnackbarProvider";
+import ClientProvider from "./contexts/ClientProvider";
 
-function App() {
-  const [count, setCount] = useState(0)
+import {
+  Outlet,
+  lazyRouteComponent as lazy,
+  RouterProvider,
+  RootRoute,
+  Route,
+  Router,
+} from "@tanstack/react-router";
 
-  return (
+// Layouts
+const Auth = lazy(() => import("@/layouts/auth"));
+const AuthLogin = lazy(() => import("@/layouts/auth/login"));
+
+// Routes
+const rootRoute = new RootRoute({
+  component: () => (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <LocalConfigProvider>
+        <ThemeProvider>
+          <SnackbarProvider>
+            <ClientProvider>
+              <Outlet />
+            </ClientProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </LocalConfigProvider>
     </>
-  )
+  ),
+});
+
+const authRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "auth",
+  component: Auth,
+});
+
+const authLoginRoute = new Route({
+  getParentRoute: () => authRoute,
+  path: "login",
+  component: AuthLogin,
+});
+
+const routeTree = rootRoute.addChildren([
+  authRoute.addChildren([authLoginRoute]),
+]);
+
+export const router = new Router({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
 }
 
-export default App
+function App() {
+  return <RouterProvider router={router} />;
+}
+
+export default App;
