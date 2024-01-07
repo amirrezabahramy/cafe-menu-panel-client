@@ -23,7 +23,7 @@ function AsyncComponent({ isLoading, isError, error, children }: TProps) {
     );
   }
 
-  return children;
+  return <>{children}</>;
 }
 
 export default AsyncComponent;
