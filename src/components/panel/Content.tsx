@@ -10,7 +10,7 @@ function Content() {
       sx={{
         width: { md: `calc(100% - ${sidebarWidth + 80}px)` },
         height: {
-          xs: `calc(100% - ${navbarHeight.xs + 80}px)`,
+          xs: `calc(100% - ${navbarHeight.xs + 45}px)`,
           sm: `calc(100% - ${navbarHeight.sm + 80}px)`,
           md: `calc(100% - ${navbarHeight.md + 80}px)`,
         },
@@ -20,11 +20,11 @@ function Content() {
           md: 0,
         },
         pt: {
-          xs: `${navbarHeight.xs + 40}px`,
+          xs: `${navbarHeight.xs + 22.5}px`,
           sm: `${navbarHeight.sm + 40}px`,
           md: `${navbarHeight.md + 40}px`,
         },
-        pl: { md: `${sidebarWidth + 40}px` },
+        px: { md: `${sidebarWidth + 47.5}px` },
       }}
     >
       <Box
