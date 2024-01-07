@@ -36,7 +36,7 @@ function LayoutContainer({ title, description, children }: TProps) {
         <Stack spacing={1} sx={{ mb: 2 }}>
           {title && <Typography variant="h5">{title}</Typography>}
           {description && (
-            <Typography color="GrayText" variant="body1">
+            <Typography color="GrayText" variant="body2">
               {description}
             </Typography>
           )}
