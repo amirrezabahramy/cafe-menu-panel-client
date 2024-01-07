@@ -101,9 +101,9 @@ function Sidebar({ items }: TProps) {
         sx={{
           display: { xs: "block", md: "none" },
         }}
-        onClose={(_, reason) =>
-          reason === "backdropClick" && setSidebarOpen(false)
-        }
+        onClose={(_, reason) => {
+          reason === "backdropClick" && setSidebarOpen(false);
+        }}
       >
         {drawer}
       </Drawer>
