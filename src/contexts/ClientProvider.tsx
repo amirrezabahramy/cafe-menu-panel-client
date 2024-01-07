@@ -17,7 +17,12 @@ type TProps = {
   children: React.ReactNode;
 };
 
-type TLoggedInUser = TUser | null;
+type TLoggedInUser =
+  | (TUser & {
+      exp: number;
+      iat: number;
+    })
+  | null;
 type TLoginUser = (token: string) => void;
 type TLogoutUser = () => void;
 
@@ -61,7 +66,7 @@ function ClientProvider({ children }: TProps) {
   };
 
   const loginUser: TLoginUser = (token) => {
-    const user: TUser = jwtDecode(token);
+    const user: TLoggedInUser = jwtDecode(token);
     setHeader("Authorization", `Bearer ${token}`);
     typedLocalStorage.setItem("token", token);
     typedLocalStorage.setItem("loggedInUser", JSON.stringify(user));
