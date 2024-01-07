@@ -7,6 +7,8 @@ type TProps = {
   isLoader: boolean;
 };
 
+export const LOADING_MESSAGE = "در حال بارگیری";
+
 function FullPageInfoComponent({ message, isLoader }: TProps) {
   return (
     <>
