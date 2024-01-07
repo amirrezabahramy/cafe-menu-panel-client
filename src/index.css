@@ -63,6 +63,40 @@ input[type="date"]::-webkit-input-placeholder {
   visibility: hidden !important;
 }
 
+/* Scrollbar */
+body ::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+body ::-webkit-scrollbar-track {
+  -webkit-border-radius: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+body ::-webkit-scrollbar-thumb {
+  background-clip: content-box;
+  -webkit-border-radius: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+body.light ::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(24, 24, 27, 0.25);
+}
+
+body.light ::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(250, 250, 250, 0.9);
+  background-color: rgba(250, 250, 250, 0.9);
+}
+
+body.dark ::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgb(250, 250, 250, 0.25);
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(24, 24, 27, 0.9);
+  background-color: rgba(24, 24, 27, 0.9);
+}
+
 /* Utilities */
 .legacy-center {
   position: absolute;
