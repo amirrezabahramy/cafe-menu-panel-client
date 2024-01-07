@@ -2,11 +2,13 @@ import { typedLocalStorage } from "@/utils/helpers/typed-local-storage";
 
 import bgLoginLight from "@/assets/images/backgrounds/bg-login-light.jpg";
 
+const mode =
+  JSON.parse(typedLocalStorage.getItem("localConfig") || "null")?.mode ||
+  "light";
+
 const body = document.getElementsByTagName("body").item(0);
 if (body) {
-  body.className =
-    JSON.parse(typedLocalStorage.getItem("localConfig") || "null")?.mode ||
-    "light";
+  body.classList.add(mode);
 }
 
 export const fonts = {
