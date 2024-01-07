@@ -103,7 +103,6 @@ const routeTree = rootRoute.addChildren([
 ]);
 
 export const router = new Router({
-  defaultPreload: "intent",
   routeTree,
   defaultPendingComponent: () => (
     <FullPageInfoComponent message={LOADING_MESSAGE} isLoader />
