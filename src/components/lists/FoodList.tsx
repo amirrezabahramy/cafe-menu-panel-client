@@ -15,8 +15,6 @@ function FoodList() {
     select: (data) => data.data,
   });
 
-  console.log(data);
-
   return (
     <AsyncComponent
       isLoading={isLoading}

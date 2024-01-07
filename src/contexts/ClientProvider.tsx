@@ -98,10 +98,7 @@ function ClientProvider({ children }: TProps) {
 
   // Navigation effect
   useEffect(() => {
-    console.log("Effect");
-    console.log(loggedInUser);
     const properNavigate = () => {
-      console.log("Called");
       if (!loggedInUser) {
         queryClient.removeQueries();
         navigate({ to: "/auth/login" });
