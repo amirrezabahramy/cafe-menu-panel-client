@@ -1,6 +1,7 @@
 import AdminPanel, { TSidebarItems } from "@/components/panel/Panel";
 import {
   AcUnit,
+  Comment,
   Dashboard,
   ExitToApp,
   LocalFireDepartment,
@@ -32,7 +33,7 @@ function Admin() {
         route: "cold-drinks",
       },
       {
-        icon: <AcUnit />,
+        icon: <Comment />,
         text: "نظرات کاربران",
         route: "reviews",
       },
