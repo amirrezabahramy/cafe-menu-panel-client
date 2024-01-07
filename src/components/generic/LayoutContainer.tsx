@@ -3,7 +3,7 @@ import { navbarHeight } from "../panel/Navbar";
 
 type TProps = {
   title: string;
-  description: string;
+  description?: string;
   children: React.ReactNode;
 };
 
