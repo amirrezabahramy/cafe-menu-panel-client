@@ -1,5 +1,8 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { AxiosError } from "axios";
+import FullPageInfoComponent, {
+  LOADING_MESSAGE,
+} from "./FullPageInfoComponent";
 
 type TProps = {
   isLoading: boolean;
@@ -10,7 +13,7 @@ type TProps = {
 
 function AsyncComponent({ isLoading, isError, error, children }: TProps) {
   if (isLoading) {
-    return <CircularProgress classes={{ root: "legacy-center" }} />;
+    return <FullPageInfoComponent message={LOADING_MESSAGE} isLoader />;
   }
 
   if (isError) {
