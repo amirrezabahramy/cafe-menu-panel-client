@@ -7,6 +7,7 @@ import { AxiosResponse } from "axios";
 import Form from "@/components/basic/Form";
 import AuthFormContainer from "../../containers/AuthFormContainer";
 import { useClient } from "@/contexts/ClientProvider";
+import PasswordField from "@/components/basic/PasswordField";
 
 type TFormData = {
   username: string;
@@ -66,9 +67,8 @@ function LoginForm() {
               handleBlur,
               handleChange,
             }) => (
-              <TextField
-                label="نام کاربری"
-                type="password"
+              <PasswordField
+                label="رمز عبور"
                 name={name}
                 value={value}
                 onChange={(e) => handleChange(e.target.value)}
