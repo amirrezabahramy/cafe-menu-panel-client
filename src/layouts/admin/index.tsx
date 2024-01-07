@@ -32,6 +32,11 @@ function Admin() {
         route: "cold-drinks",
       },
       {
+        icon: <AcUnit />,
+        text: "نظرات کاربران",
+        route: "reviews",
+      },
+      {
         icon: <ExitToApp />,
         text: "خروج",
         route: "/auth/login",
