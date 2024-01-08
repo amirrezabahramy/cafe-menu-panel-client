@@ -1,4 +1,4 @@
-type TModelBase = {
+type TBaseModel = {
   _id: string;
 };
 
@@ -9,30 +9,30 @@ export type TUser = {
   password: string;
   email: string;
   role: "admin" | "customer";
-} & TModelBase;
+} & TBaseModel;
 
 export type TColdDrink = {
   name: string;
   image: string;
   description: string;
   price: number;
-} & TModelBase;
+} & TBaseModel;
 
 export type TFood = {
   name: string;
   image: string;
   description: string;
   price: number;
-} & TModelBase;
+} & TBaseModel;
 
 export type THotDrink = {
   name: string;
   image: string;
   description: string;
   price: number;
-} & TModelBase;
+} & TBaseModel;
 
 export type TReview = {
   title: string;
   description: string;
-} & TModelBase;
+} & TBaseModel;
