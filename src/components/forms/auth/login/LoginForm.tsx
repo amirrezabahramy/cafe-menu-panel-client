@@ -8,6 +8,7 @@ import Form from "@/components/basic/Form";
 import AuthFormContainer from "../../containers/AuthFormContainer";
 import { useAuth } from "@/contexts/AuthProvider";
 import PasswordField from "@/components/basic/PasswordField";
+import { useSnackbar } from "@/contexts/SnackbarProvider";
 
 type TFormData = {
   username: string;
@@ -17,6 +18,7 @@ type TFormData = {
 type TLoginResponse = AxiosResponse<{ accessToken: string }>;
 
 function LoginForm() {
+  const { triggerManual } = useSnackbar();
   const { loginUser } = useAuth();
 
   const { mutateAsync: submitLogin } = useMutation({
@@ -25,6 +27,7 @@ function LoginForm() {
       api.post<TFormData, TLoginResponse>("auth/login", data),
     onSuccess: (data) => {
       loginUser(data.data.accessToken);
+      triggerManual("success", "خوش آمدید.");
     },
   });
 
