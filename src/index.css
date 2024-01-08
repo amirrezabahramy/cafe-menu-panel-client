@@ -37,7 +37,7 @@
 body {
   font-family: IRRegular, VazirRegular;
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   overflow: hidden;
   font-size: 0.875rem;
   margin: 0;
