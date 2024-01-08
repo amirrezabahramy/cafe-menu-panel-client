@@ -13,7 +13,7 @@ import { useMemo } from "react";
 import SidebarItemExpandable from "./SidebarItemExpandable";
 import SidebarItem from "./SidebarItem";
 import { TSidebarItems, panelDefaultOpacity } from "../Panel";
-import { useClient } from "@/contexts/ClientProvider";
+import { useAuth } from "@/contexts/AuthProvider";
 import { useSnackbar } from "@/contexts/SnackbarProvider";
 import { roles } from "@/utils/translations";
 import { useTheme } from "@/contexts/ThemeProvider";
@@ -28,7 +28,7 @@ export const sidebarWidth = 256;
 function Sidebar({ items }: TProps) {
   const { sidebarOpen, setSidebarOpen } = useSidebar();
   const { triggerManual } = useSnackbar();
-  const { loggedInUser, logoutUser } = useClient();
+  const { loggedInUser, logoutUser } = useAuth();
   const { colorByMode } = useTheme();
   if (items[0].route) {
   }

@@ -6,7 +6,7 @@ import api from "@/services/api";
 import { AxiosResponse } from "axios";
 import Form from "@/components/basic/Form";
 import AuthFormContainer from "../../containers/AuthFormContainer";
-import { useClient } from "@/contexts/ClientProvider";
+import { useAuth } from "@/contexts/AuthProvider";
 import PasswordField from "@/components/basic/PasswordField";
 
 type TFormData = {
@@ -17,7 +17,7 @@ type TFormData = {
 type TLoginResponse = AxiosResponse<{ accessToken: string }>;
 
 function LoginForm() {
-  const { loginUser } = useClient();
+  const { loginUser } = useAuth();
 
   const { mutateAsync: submitLogin } = useMutation({
     mutationKey: ["login-user"],
