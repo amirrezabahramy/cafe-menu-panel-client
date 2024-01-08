@@ -183,7 +183,7 @@ function OrderItemCardEditable({
         onSubmit={handleSubmit}
       >
         <Box>
-          <CardMedia component="img" height={125} width={100} image={image} />
+          <CardMedia component="img" height={200} width={100} image={image} />
           <CardContent component={Stack} spacing={isEditMode ? 0.75 : 0.25}>
             {isEditMode ? (
               <NameField />

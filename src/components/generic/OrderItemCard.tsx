@@ -23,7 +23,7 @@ function OrderItemCard({ name, description, price, image }: TProps) {
         flex: { xs: "50%", sm: "33%", lg: "25%", xl: "20%" },
       }}
     >
-      <CardMedia component="img" height={125} width={100} image={image} />
+      <CardMedia component="img" height={200} width={100} image={image} />
       <CardContent component={Stack} spacing={0.25}>
         <Typography variant="h5">{name}</Typography>
 
