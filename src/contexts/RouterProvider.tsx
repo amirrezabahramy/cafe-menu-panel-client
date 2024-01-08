@@ -40,7 +40,6 @@ const redirectFn: TRedirectFn = async ({ location }) => {
   const loggedInUser = JSON.parse(
     typedLocalStorage.getItem("loggedInUser") || "null"
   );
-  console.log(location);
   if (!loggedInUser && location.href !== "/auth/login") {
     return redirect({ to: "/auth/login" });
   } else if (
