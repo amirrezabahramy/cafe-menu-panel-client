@@ -15,7 +15,8 @@ function AuthFormContainer({ children, sx, ...rest }: TProps) {
         m: 2,
         bgcolor: colorByMode(),
         borderRadius: 2,
-        width: "300px",
+        width: 1,
+        maxWidth: { xs: 250, sm: 300 },
         boxShadow: boxShadows.medium,
         ...sx,
       }}
