@@ -1,8 +1,10 @@
 import { Box } from "@mui/material";
 import { Outlet } from "@tanstack/react-router";
 import { backgroundImages } from "@/css-in-js/styles";
+import { useTheme } from "@/contexts/ThemeProvider";
 
 function Auth() {
+  const { mode } = useTheme();
   return (
     <Box
       sx={{
@@ -11,7 +13,7 @@ function Auth() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        ...backgroundImages.bgLogin.light,
+        ...backgroundImages.bgLogin[mode],
       }}
     >
       <Outlet />
