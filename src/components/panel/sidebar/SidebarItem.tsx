@@ -15,7 +15,7 @@ function SidebarItem({ icon, text, route, onClick }: TProps) {
       sx={{ my: 0.75, minWidth: sidebarWidth }}
       onClick={isExitItem ? onClick : undefined}
       LinkComponent={isExitItem ? undefined : Link}
-      to={route}
+      to={isExitItem ? undefined : route}
     >
       <ListItemIcon sx={{ ml: 1 }}>{icon}</ListItemIcon>
       <ListItemText sx={{ mr: 1 }}>{text}</ListItemText>
