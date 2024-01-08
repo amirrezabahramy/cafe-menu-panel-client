@@ -5,9 +5,8 @@ function FlexListContainer({ children, sx, ...rest }: BoxProps) {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "space-between",
         flexWrap: "wrap",
-        gap: 6,
+        gap: { xs: 6, xl: 7 },
         ...sx,
       }}
       {...rest}
