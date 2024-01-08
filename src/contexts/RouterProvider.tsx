@@ -1,7 +1,6 @@
 import FullPageInfoComponent, {
   LOADING_MESSAGE,
 } from "@/components/generic/FullPageInfoComponent";
-import { TUser } from "@/types/models";
 import { typedLocalStorage } from "@/utils/helpers/typed-local-storage";
 import {
   RootRoute,
