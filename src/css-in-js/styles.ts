@@ -1,8 +1,10 @@
 import { typedLocalStorage } from "@/utils/helpers/typed-local-storage";
+import bgLogin from "@/assets/images/backgrounds/bg-login.jpg";
+import bgPanelLight from "@/assets/images/backgrounds/bg-panel-light.jpg";
+import bgPanelDark from "@/assets/images/backgrounds/bg-panel-dark.jpg";
+import { PaletteMode } from "@mui/material";
 
-import bgLoginLight from "@/assets/images/backgrounds/bg-login-light.jpg";
-
-const mode =
+const mode: PaletteMode =
   JSON.parse(typedLocalStorage.getItem("localConfig") || "null")?.mode ||
   "light";
 
@@ -22,20 +24,42 @@ export const boxShadows = {
 export const backgroundImages = {
   bgLogin: {
     light: {
-      backgroundImage: `url(${bgLoginLight})`,
+      backgroundImage: `linear-gradient(
+        rgba(255, 255, 255, 0.15),
+        rgba(255, 255, 255, 0.15)
+      ), url(${bgLogin})`,
       backgroundPosition: "bottom",
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
     },
     dark: {
-      backgroundImage: `url(${bgLoginLight})`,
-      backgroundPosition: "center",
+      backgroundImage: `linear-gradient(
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15)
+      ), url(${bgLogin})`,
+      backgroundPosition: "bottom",
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
     },
   },
   bgPanel: {
-    light: {},
-    dark: {},
+    light: {
+      backgroundImage: `linear-gradient(
+      rgba(255, 255, 255, 0.75),
+      rgba(255, 255, 255, 0.75)
+    ), url(${bgPanelLight})`,
+      backgroundPosition: "bottom",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+    },
+    dark: {
+      backgroundImage: `linear-gradient(
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.75)
+    ), url(${bgPanelDark})`,
+      backgroundPosition: "bottom",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+    },
   },
 };
