@@ -1,16 +1,14 @@
 import api from "@/services/api";
-import { TReview } from "@/types/models";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import AsyncComponent from "../generic/AsyncComponent";
 import ReviewAccordion from "../generic/ReviewAccordion";
-
-type TReviewsData = AxiosResponse<Array<TReview>>;
+import { TReviewListData } from "@/types/queries/reviews";
 
 function ReviewsList() {
   const { isLoading, isError, error, data } = useQuery({
     queryKey: ["get-reviews-list"],
-    queryFn: () => api.get<undefined, TReviewsData>("reviews"),
+    queryFn: () => api.get<void, TReviewListData>("reviews"),
     select: (data) => data.data,
   });
 
