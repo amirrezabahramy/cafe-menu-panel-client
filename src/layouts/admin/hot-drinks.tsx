@@ -1,5 +1,5 @@
 import LayoutContainer from "@/components/generic/LayoutContainer";
-import ColdDrinksList from "@/components/lists/ColdDrinksList";
+import HotDrinksList from "@/components/lists/HotDrinksList";
 
 function HotDrinks() {
   return (
@@ -7,7 +7,7 @@ function HotDrinks() {
       title="نوشیدنی های گرم"
       description="در این صفحه لیست نوشیدنی های گرم را مشاهده می کنید."
     >
-      <ColdDrinksList />
+      <HotDrinksList />
     </LayoutContainer>
   );
 }
