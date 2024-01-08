@@ -48,6 +48,7 @@ function QueryClientProvider({ children }: TProps) {
       }
     };
     cleanUp();
+    return cleanUp;
   }, [loggedInUser]);
 
   return (
