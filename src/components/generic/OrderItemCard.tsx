@@ -1,4 +1,5 @@
 import { useTheme } from "@/contexts/ThemeProvider";
+import { TOrderItem } from "@/types/models";
 import {
   Card,
   CardContent,
@@ -8,27 +9,26 @@ import {
   Typography,
 } from "@mui/material";
 
-type TProps = {
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-};
+type TProps = Omit<TOrderItem, "_id" | "type">;
 
-function OrderItemCard({ name, image, description, price }: TProps) {
+function OrderItemCard({ name, description, price, image }: TProps) {
   const { colorByMode } = useTheme();
-
   return (
     <Card
       sx={{
         bgcolor: colorByMode(),
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
         flex: { xs: "50%", sm: "33%", lg: "25%", xl: "20%" },
       }}
     >
-      <CardMedia component="img" height={100} width={100} image={image} />
+      <CardMedia component="img" height={125} width={100} image={image} />
       <CardContent component={Stack} spacing={0.25}>
         <Typography variant="h5">{name}</Typography>
+
         <Typography variant="subtitle1">{`${price} تومان`}</Typography>
+
         <Divider sx={{ pt: 0.33 }} />
         <Typography sx={{ pt: 1 }} variant="body2" color="text.secondary">
           {description}
