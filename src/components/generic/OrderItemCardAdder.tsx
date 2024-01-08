@@ -103,8 +103,10 @@ function OrderItemCardAdder({ onAdd }: TProps) {
           bgcolor: colorByMode(),
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          flex: { xs: "50%", sm: "33%", lg: "25%", xl: "20%" },
+          justifyContent: { sm: "space-between", lg: "flex-start" },
+          flexGrow: 1,
+          minWidth: { lg: 300 },
+          maxWidth: { lg: 500 },
         }}
         component={Form}
         onSubmit={handleSubmit}
