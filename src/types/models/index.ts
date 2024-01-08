@@ -11,25 +11,12 @@ export type TUser = {
   role: "admin" | "customer";
 } & TBaseModel;
 
-export type TColdDrink = {
+export type TOrderItem = {
   name: string;
   image: string;
   description: string;
   price: number;
-} & TBaseModel;
-
-export type TFood = {
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-} & TBaseModel;
-
-export type THotDrink = {
-  name: string;
-  image: string;
-  description: string;
-  price: number;
+  type: "food" | "hot-drink" | "cold-drink";
 } & TBaseModel;
 
 export type TReview = {
