@@ -11,8 +11,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useForm } from "@tanstack/react-form";
-import { useEffect, useState } from "react";
+import { FormState, useForm } from "@tanstack/react-form";
+import { useCallback, useEffect, useState } from "react";
 import Form from "../basic/Form";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -48,11 +48,13 @@ function OrderItemCardEditable({
       price: price.toString(),
     },
     onSubmit: async ({ value }) => {
+      console.log(value);
       const updatedItem = {
         _id,
         ...value,
         price: parseFloat(value.price),
       };
+      console.log(updatedItem);
       await onUpdate(updatedItem, {
         onSuccess: () => {
           setIsEditMode(false);
@@ -61,102 +63,114 @@ function OrderItemCardEditable({
     },
   });
 
-  const NameField = () => (
-    <Field
-      name="name"
-      children={({ name, state: { value }, handleBlur, handleChange }) => (
-        <TextField
-          variant="standard"
-          label="نام"
-          name={name}
-          value={value}
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-          onBlur={handleBlur}
-        />
-      )}
-    />
+  const NameField = useCallback(
+    () => (
+      <Field
+        name="name"
+        children={({ name, state: { value }, handleBlur, handleChange }) => (
+          <TextField
+            variant="standard"
+            label="نام"
+            name={name}
+            value={value}
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
+            onBlur={handleBlur}
+          />
+        )}
+      />
+    ),
+    [isEditMode]
   );
 
-  const PriceField = () => (
-    <Field
-      name="price"
-      children={({ name, state: { value }, handleChange, handleBlur }) => (
-        <TextField
-          variant="standard"
-          label="قیمت (تومان)"
-          type="number"
-          name={name}
-          value={value}
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-          onBlur={handleBlur}
-        />
-      )}
-    />
+  const PriceField = useCallback(
+    () => (
+      <Field
+        name="price"
+        children={({ name, state: { value }, handleChange, handleBlur }) => (
+          <TextField
+            variant="standard"
+            label="قیمت (تومان)"
+            type="number"
+            name={name}
+            value={value}
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
+            onBlur={handleBlur}
+          />
+        )}
+      />
+    ),
+    [isEditMode]
   );
 
-  const DescriptionField = () => (
-    <Field
-      name="description"
-      children={({ name, state: { value }, handleBlur, handleChange }) => (
-        <TextField
-          variant="standard"
-          label="توضیحات"
-          name={name}
-          value={value}
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-          onBlur={handleBlur}
-        />
-      )}
-    />
+  const DescriptionField = useCallback(
+    () => (
+      <Field
+        name="description"
+        children={({ name, state: { value }, handleBlur, handleChange }) => (
+          <TextField
+            variant="standard"
+            label="توضیحات"
+            name={name}
+            value={value}
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
+            onBlur={handleBlur}
+          />
+        )}
+      />
+    ),
+    [isEditMode]
   );
 
-  const Buttons = ({ canSubmit, isSubmitting }: any) => (
-    <>
-      <LoadingButton
-        size="small"
-        disabled={isEditMode && (!canSubmit || isRemoving)}
-        type={isEditMode ? "submit" : "button"}
-        variant={isEditMode ? "contained" : "outlined"}
-        loading={isSubmitting}
-        onClick={() => {
-          setIsEditMode(true);
-        }}
-      >
-        {isEditMode ? "ثبت" : "ویرایش"}
-      </LoadingButton>
-      {isEditMode && (
+  const Buttons = useCallback(
+    ({ canSubmit, isSubmitting }: FormState<Omit<TOrderItem, "type">>) => (
+      <>
         <LoadingButton
           size="small"
-          disabled={!canSubmit || isRemoving}
-          variant="outlined"
-          color="error"
-          onClick={async () => {
-            await onRemove(_id);
-          }}
-          loading={isRemoving}
-        >
-          حذف
-        </LoadingButton>
-      )}
-      {isEditMode && (
-        <Button
-          size="small"
-          disabled={!canSubmit || isRemoving}
-          variant="outlined"
+          disabled={isEditMode && (!canSubmit || isRemoving)}
+          type={isEditMode ? "submit" : "button"}
+          variant={isEditMode ? "contained" : "outlined"}
+          loading={isSubmitting}
           onClick={() => {
-            setIsEditMode(false);
+            setIsEditMode(true);
           }}
         >
-          لغو
-        </Button>
-      )}
-    </>
+          {isEditMode ? "ثبت" : "ویرایش"}
+        </LoadingButton>
+        {isEditMode && (
+          <LoadingButton
+            size="small"
+            disabled={!canSubmit || isRemoving}
+            variant="outlined"
+            color="error"
+            onClick={async () => {
+              await onRemove(_id);
+            }}
+            loading={isRemoving}
+          >
+            حذف
+          </LoadingButton>
+        )}
+        {isEditMode && (
+          <Button
+            size="small"
+            disabled={!canSubmit || isRemoving}
+            variant="outlined"
+            onClick={() => {
+              setIsEditMode(false);
+            }}
+          >
+            لغو
+          </Button>
+        )}
+      </>
+    ),
+    [isEditMode]
   );
 
   useEffect(() => {
