@@ -1,14 +1,29 @@
 import CustomerPanel, { TSidebarItems } from "@/components/panel/Panel";
-import { Dashboard } from "@mui/icons-material";
+import {
+  AcUnit,
+  Comment,
+  LocalFireDepartment,
+  RestaurantMenu,
+} from "@mui/icons-material";
 import { useMemo } from "react";
 
 function Customer() {
   const sidebarItems: TSidebarItems = useMemo(
     () => [
       {
-        icon: <Dashboard />,
-        text: "داشبورد",
-        route: "dashboard",
+        icon: <RestaurantMenu />,
+        text: "غذا",
+        route: "food",
+      },
+      {
+        icon: <LocalFireDepartment />,
+        text: "نوشیدنی های گرم",
+        route: "hot-drinks",
+      },
+      {
+        icon: <AcUnit />,
+        text: "نوشیدنی های سرد",
+        route: "cold-drinks",
       },
     ],
     []
