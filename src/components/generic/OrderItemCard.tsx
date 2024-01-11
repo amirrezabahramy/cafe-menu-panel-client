@@ -19,7 +19,7 @@ function OrderItemCard({ name, description, price, image }: TProps) {
         bgcolor: colorByMode(),
         display: "flex",
         flexDirection: "column",
-        justifyContent: { sm: "space-between", lg: "flex-start" },
+        justifyContent: "space-between",
         flexGrow: 1,
         minWidth: { lg: 300 },
         maxWidth: { lg: 500 },
