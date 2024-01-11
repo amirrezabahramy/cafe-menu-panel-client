@@ -1,7 +1,6 @@
 import CustomerPanel, { TSidebarItems } from "@/components/panel/Panel";
 import {
   AcUnit,
-  Comment,
   LocalFireDepartment,
   RestaurantMenu,
 } from "@mui/icons-material";
