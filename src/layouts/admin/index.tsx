@@ -10,7 +10,7 @@ import {
 import { useMemo } from "react";
 
 function Admin() {
-  const sideBarItems: TSidebarItems = useMemo(
+  const sidebarItems: TSidebarItems = useMemo(
     () => [
       {
         icon: <Dashboard />,
@@ -46,7 +46,7 @@ function Admin() {
     []
   );
 
-  return <AdminPanel sidebarItems={sideBarItems} />;
+  return <AdminPanel sidebarItems={sidebarItems} />;
 }
 
 export default Admin;
