@@ -1,11 +1,13 @@
 import { useTheme } from "@/contexts/ThemeProvider";
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
   CardMedia,
   Divider,
+  IconButton,
   Stack,
   TextField,
   Typography,
@@ -14,6 +16,20 @@ import { useForm } from "@tanstack/react-form";
 import Form from "../basic/Form";
 import { LoadingButton } from "@mui/lab";
 import { TAddOrderItemMutate } from "@/types/queries/order-item";
+import { useEffect, useState } from "react";
+import { useFilePicker } from "use-file-picker";
+import {
+  FileSizeValidator,
+  FileTypeValidator,
+} from "use-file-picker/validators";
+import { Close, UploadFile } from "@mui/icons-material";
+import { zodValidator } from "@tanstack/zod-form-adapter";
+import {
+  descriptionValidator,
+  nameValidator,
+  required,
+} from "@/utils/validators";
+import { REQUIRED } from "@/utils/validators/messages";
 
 type TProps = {
   onAdd: TAddOrderItemMutate;
@@ -22,79 +38,67 @@ type TProps = {
 function OrderItemCardAdder({ onAdd }: TProps) {
   const { colorByMode } = useTheme();
 
+  const [orderItemImage, setOrderItemImage] = useState("");
+  const [orderItemImageErrors, setOrderItemImageErrors] = useState<
+    Array<string>
+  >([]);
+
+  // Form hook
   const { Provider, Field, Subscribe, handleSubmit, reset } = useForm({
     defaultValues: {
       name: "",
       description: "",
       price: "",
     },
+    validators: {
+      //@ts-ignore
+      onSubmit: () => {
+        if (!orderItemImage) {
+          setOrderItemImageErrors([REQUIRED]);
+        }
+      },
+    },
     onSubmit: async ({ value }) => {
+      if (!orderItemImage) {
+        return;
+      }
+      !!orderItemImageErrors.length && setOrderItemImageErrors([]);
       const addedItem = {
         ...value,
-        price: parseFloat(value.price),
+        image: orderItemImage,
+        price: parseInt(value.price),
       };
-      // await onAdd(addedItem, {
-      //   onSuccess: () => {
-      //     reset();
-      //   },
-      // });
+      console.log(addedItem);
+      await onAdd(addedItem, {
+        onSuccess: clearFields,
+      });
     },
   });
 
-  const NameField = () => (
-    <Field
-      name="name"
-      children={({ name, state: { value }, handleBlur, handleChange }) => (
-        <TextField
-          variant="standard"
-          label="نام"
-          name={name}
-          value={value}
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-          onBlur={handleBlur}
-        />
-      )}
-    />
-  );
+  // File picker hook
+  const { loading, errors, clear, openFilePicker } = useFilePicker({
+    readAs: "DataURL",
+    accept: "image/png, image/jpg, image/jpeg",
+    multiple: false,
+    validators: [
+      new FileTypeValidator(["png", "jpg", "jpeg"]),
+      new FileSizeValidator({ maxFileSize: 3 * 1024 * 1024 }),
+    ],
+    onFilesSuccessfullySelected: (files) => {
+      setOrderItemImage(files.filesContent[0].content);
+    },
+  });
 
-  const PriceField = () => (
-    <Field
-      name="price"
-      children={({ name, state: { value }, handleChange, handleBlur }) => (
-        <TextField
-          variant="standard"
-          label="قیمت (تومان)"
-          type="number"
-          name={name}
-          value={value}
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-          onBlur={handleBlur}
-        />
-      )}
-    />
-  );
+  const clearFields = () => {
+    reset();
+    setOrderItemImage("");
+    setOrderItemImageErrors([]);
+    clear();
+  };
 
-  const DescriptionField = () => (
-    <Field
-      name="description"
-      children={({ name, state: { value }, handleBlur, handleChange }) => (
-        <TextField
-          variant="standard"
-          label="توضیحات"
-          name={name}
-          value={value}
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-          onBlur={handleBlur}
-        />
-      )}
-    />
-  );
+  useEffect(() => {
+    console.log(orderItemImageErrors);
+  }, [orderItemImageErrors]);
 
   return (
     <Provider>
@@ -112,15 +116,149 @@ function OrderItemCardAdder({ onAdd }: TProps) {
         onSubmit={handleSubmit}
       >
         <Box>
-          {/* <CardMedia component="img" height={125} width={100} image={image} /> */}
+          {orderItemImage && (
+            <Box position="relative">
+              <CardMedia
+                component="img"
+                height={125}
+                width={100}
+                image={orderItemImage}
+              />
+              <IconButton
+                onClick={() => {
+                  setOrderItemImage("");
+                  clear();
+                }}
+                sx={{
+                  bgcolor: colorByMode(),
+                  position: "absolute",
+                  top: 10,
+                  right: 10,
+                  ":hover": {
+                    bgcolor: colorByMode(),
+                  },
+                }}
+              >
+                <Close />
+              </IconButton>
+            </Box>
+          )}
           <CardContent component={Stack} spacing={0.75}>
             <Typography variant="h6">
               اطلاعات محصول جدید را وارد کنید.
             </Typography>
             <Divider sx={{ pt: 1 }} />
-            <NameField />
-            <PriceField />
-            <DescriptionField />
+            {!orderItemImage && (
+              <TextField
+                label={loading ? "در حال بارگیری عکس..." : "عکس محصول"}
+                disabled
+                InputProps={{
+                  readOnly: true,
+                  endAdornment: (
+                    <IconButton disabled={loading} onClick={openFilePicker}>
+                      <UploadFile />
+                    </IconButton>
+                  ),
+                }}
+                variant="standard"
+                error={!!errors.length || !!orderItemImageErrors.length}
+                helperText={
+                  orderItemImageErrors.length
+                    ? orderItemImageErrors.join(", ")
+                    : "حداکثر حجم فایل: 2 مگابایت"
+                }
+              >
+                انتخاب عکس
+              </TextField>
+            )}
+            <Field
+              name="name"
+              validatorAdapter={zodValidator}
+              validators={{
+                onSubmit: nameValidator(),
+              }}
+              children={({
+                name,
+                state: {
+                  value,
+                  meta: { errors },
+                },
+                handleBlur,
+                handleChange,
+              }) => (
+                <TextField
+                  variant="standard"
+                  label="نام"
+                  name={name}
+                  value={value}
+                  onChange={(e) => {
+                    handleChange(e.target.value);
+                  }}
+                  onBlur={handleBlur}
+                  error={!!errors.length}
+                  helperText={errors.join(", ")}
+                />
+              )}
+            />
+            <Field
+              name="price"
+              validatorAdapter={zodValidator}
+              validators={{
+                onSubmit: required(),
+              }}
+              children={({
+                name,
+                state: {
+                  value,
+                  meta: { errors },
+                },
+                handleChange,
+                handleBlur,
+              }) => (
+                <TextField
+                  variant="standard"
+                  label="قیمت (تومان)"
+                  type="number"
+                  name={name}
+                  value={value}
+                  onChange={(e) => {
+                    handleChange(e.target.value);
+                  }}
+                  onBlur={handleBlur}
+                  error={!!errors.length}
+                  helperText={errors.join(", ")}
+                />
+              )}
+            />
+            <Field
+              name="description"
+              validatorAdapter={zodValidator}
+              validators={{
+                onSubmit: descriptionValidator(),
+              }}
+              children={({
+                name,
+                state: {
+                  value,
+                  meta: { errors },
+                },
+                handleBlur,
+                handleChange,
+              }) => (
+                <TextField
+                  variant="standard"
+                  label="توضیحات"
+                  name={name}
+                  value={value}
+                  onChange={(e) => {
+                    handleChange(e.target.value);
+                  }}
+                  onBlur={handleBlur}
+                  error={!!errors.length}
+                  helperText={errors.join(", ")}
+                />
+              )}
+            />
           </CardContent>
         </Box>
         <CardActions>
@@ -130,15 +268,20 @@ function OrderItemCardAdder({ onAdd }: TProps) {
               isSubmitting,
             ]}
             children={([canSubmit, isSubmitting]) => (
-              <LoadingButton
-                size="small"
-                disabled={!canSubmit}
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                اضافه کردن
-              </LoadingButton>
+              <>
+                <LoadingButton
+                  size="small"
+                  disabled={!canSubmit}
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  اضافه کردن
+                </LoadingButton>
+                <Button onClick={clearFields} size="small" variant="outlined">
+                  پاک کردن
+                </Button>
+              </>
             )}
           />
         </CardActions>

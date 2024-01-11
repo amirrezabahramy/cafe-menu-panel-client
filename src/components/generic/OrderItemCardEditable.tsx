@@ -7,6 +7,7 @@ import {
   CardContent,
   CardMedia,
   Divider,
+  IconButton,
   Stack,
   TextField,
   Typography,
@@ -20,6 +21,19 @@ import {
   TUpdateOrderItemMutate,
 } from "@/types/queries/order-item";
 import { TOrderItem } from "@/types/models";
+import {
+  FileSizeValidator,
+  FileTypeValidator,
+} from "use-file-picker/validators";
+import { useFilePicker } from "use-file-picker";
+import { Close, UploadFile } from "@mui/icons-material";
+import { zodValidator } from "@tanstack/zod-form-adapter";
+import {
+  descriptionValidator,
+  nameValidator,
+  required,
+} from "@/utils/validators";
+import { REQUIRED } from "@/utils/validators/messages";
 
 type TProps = Omit<TOrderItem, "type"> & {
   onUpdate: TUpdateOrderItemMutate;
@@ -40,6 +54,10 @@ function OrderItemCardEditable({
   const { colorByMode } = useTheme();
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [orderItemImage, setOrderItemImage] = useState(image);
+  const [orderItemImageErrors, setOrderItemImageErrors] = useState<
+    Array<string>
+  >([]);
 
   const { Provider, Field, Subscribe, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -47,14 +65,25 @@ function OrderItemCardEditable({
       description,
       price: price.toString(),
     },
+    validators: {
+      //@ts-ignore
+      onSubmit: () => {
+        if (!orderItemImage) {
+          setOrderItemImageErrors([REQUIRED]);
+        }
+      },
+    },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      if (!orderItemImage) {
+        return;
+      }
+      !!orderItemImageErrors.length && setOrderItemImageErrors([]);
       const updatedItem = {
         _id,
         ...value,
+        image: orderItemImage,
         price: parseInt(value.price),
       };
-      console.log(updatedItem);
       await onUpdate(updatedItem, {
         onSuccess: () => {
           setIsEditMode(false);
@@ -63,11 +92,30 @@ function OrderItemCardEditable({
     },
   });
 
+  const clearFields = () => {
+    reset();
+    setOrderItemImage(image);
+    setOrderItemImageErrors([]);
+    clear();
+  };
+
   const NameField = useCallback(
     () => (
       <Field
         name="name"
-        children={({ name, state: { value }, handleBlur, handleChange }) => (
+        validatorAdapter={zodValidator}
+        validators={{
+          onSubmit: nameValidator(),
+        }}
+        children={({
+          name,
+          state: {
+            value,
+            meta: { errors },
+          },
+          handleBlur,
+          handleChange,
+        }) => (
           <TextField
             variant="standard"
             label="نام"
@@ -77,6 +125,8 @@ function OrderItemCardEditable({
               handleChange(e.target.value);
             }}
             onBlur={handleBlur}
+            error={!!errors.length}
+            helperText={errors.join(", ")}
           />
         )}
       />
@@ -88,7 +138,19 @@ function OrderItemCardEditable({
     () => (
       <Field
         name="price"
-        children={({ name, state: { value }, handleChange, handleBlur }) => (
+        validatorAdapter={zodValidator}
+        validators={{
+          onSubmit: required(),
+        }}
+        children={({
+          name,
+          state: {
+            value,
+            meta: { errors },
+          },
+          handleChange,
+          handleBlur,
+        }) => (
           <TextField
             variant="standard"
             label="قیمت (تومان)"
@@ -99,6 +161,8 @@ function OrderItemCardEditable({
               handleChange(e.target.value);
             }}
             onBlur={handleBlur}
+            error={!!errors.length}
+            helperText={errors.join(", ")}
           />
         )}
       />
@@ -110,7 +174,19 @@ function OrderItemCardEditable({
     () => (
       <Field
         name="description"
-        children={({ name, state: { value }, handleBlur, handleChange }) => (
+        validatorAdapter={zodValidator}
+        validators={{
+          onSubmit: descriptionValidator(),
+        }}
+        children={({
+          name,
+          state: {
+            value,
+            meta: { errors },
+          },
+          handleBlur,
+          handleChange,
+        }) => (
           <TextField
             variant="standard"
             label="توضیحات"
@@ -120,6 +196,8 @@ function OrderItemCardEditable({
               handleChange(e.target.value);
             }}
             onBlur={handleBlur}
+            error={!!errors.length}
+            helperText={errors.join(", ")}
           />
         )}
       />
@@ -151,7 +229,7 @@ function OrderItemCardEditable({
         {isEditMode && (
           <LoadingButton
             size="small"
-            disabled={!canSubmit || isRemoving}
+            disabled={isSubmitting || isRemoving}
             variant="outlined"
             color="error"
             onClick={async () => {
@@ -165,7 +243,7 @@ function OrderItemCardEditable({
         {isEditMode && (
           <Button
             size="small"
-            disabled={!canSubmit || isRemoving}
+            disabled={isSubmitting || isRemoving}
             variant="outlined"
             onClick={() => {
               setIsEditMode(false);
@@ -176,13 +254,28 @@ function OrderItemCardEditable({
         )}
       </>
     ),
-    [isEditMode]
+    [isEditMode, isRemoving]
   );
 
+  // File picker hook
+  const { loading, errors, clear, openFilePicker } = useFilePicker({
+    readAs: "DataURL",
+    accept: "image/png, image/jpg, image/jpeg",
+    multiple: false,
+    validators: [
+      new FileTypeValidator(["png", "jpg", "jpeg"]),
+      new FileSizeValidator({ maxFileSize: 3 * 1024 * 1024 }),
+    ],
+    onFilesSuccessfullySelected: (files) => {
+      setOrderItemImage(files.filesContent[0].content);
+    },
+  });
+
+  // Side effects
   useEffect(() => {
     const cleanUp = () => {
       if (!isEditMode) {
-        reset();
+        clearFields();
       }
     };
     cleanUp();
@@ -205,8 +298,59 @@ function OrderItemCardEditable({
         onSubmit={handleSubmit}
       >
         <Box>
-          <CardMedia component="img" height={200} width={100} image={image} />
+          {orderItemImage && isEditMode ? (
+            <Box position="relative">
+              <CardMedia
+                component="img"
+                height={200}
+                width={100}
+                image={orderItemImage}
+              />
+              <IconButton
+                onClick={() => {
+                  setOrderItemImage("");
+                  clear();
+                }}
+                sx={{
+                  bgcolor: colorByMode(),
+                  position: "absolute",
+                  top: 10,
+                  right: 10,
+                  ":hover": {
+                    bgcolor: colorByMode(),
+                  },
+                }}
+              >
+                <Close />
+              </IconButton>
+            </Box>
+          ) : image && !isEditMode ? (
+            <CardMedia component="img" height={200} width={100} image={image} />
+          ) : null}
           <CardContent component={Stack} spacing={isEditMode ? 0.75 : 0.25}>
+            {isEditMode && (
+              <TextField
+                label={loading ? "در حال بارگیری عکس..." : "عکس محصول"}
+                disabled
+                InputProps={{
+                  readOnly: true,
+                  endAdornment: (
+                    <IconButton disabled={loading} onClick={openFilePicker}>
+                      <UploadFile />
+                    </IconButton>
+                  ),
+                }}
+                variant="standard"
+                error={!!errors.length || !!orderItemImageErrors.length}
+                helperText={
+                  orderItemImageErrors.length
+                    ? orderItemImageErrors.join(", ")
+                    : "حداکثر حجم فایل: 2 مگابایت"
+                }
+              >
+                انتخاب عکس
+              </TextField>
+            )}
             {isEditMode ? (
               <NameField />
             ) : (
