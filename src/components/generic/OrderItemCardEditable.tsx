@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FormState, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { useCallback, useEffect, useState } from "react";
 import Form from "../basic/Form";
 import { LoadingButton } from "@mui/lab";
@@ -128,7 +128,13 @@ function OrderItemCardEditable({
   );
 
   const Buttons = useCallback(
-    ({ canSubmit, isSubmitting }: FormState<Omit<TOrderItem, "type">>) => (
+    ({
+      canSubmit,
+      isSubmitting,
+    }: {
+      canSubmit?: boolean;
+      isSubmitting?: boolean;
+    }) => (
       <>
         <LoadingButton
           size="small"
