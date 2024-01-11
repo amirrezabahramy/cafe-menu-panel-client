@@ -27,6 +27,11 @@ function Navbar() {
       sx={{
         bgcolor: colorByMode(),
         width: { md: `calc(100% - ${sidebarWidth + 12}px)` },
+        borderBottom: "1px solid",
+        borderColor:
+          mode === "light"
+            ? "rgba(0, 0, 0, 0.108)"
+            : "rgba(255, 255, 255, 0.108)",
         ml: { md: `${sidebarWidth}px` },
         boxShadow: "none",
         opacity: panelDefaultOpacity,
