@@ -57,7 +57,9 @@ function LoginForm() {
                 label="نام کاربری"
                 name={name}
                 value={value}
-                onChange={(e) => handleChange(e.target.value)}
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                }}
                 onBlur={handleBlur}
               />
             )}
@@ -74,7 +76,9 @@ function LoginForm() {
                 label="رمز عبور"
                 name={name}
                 value={value}
-                onChange={(e) => handleChange(e.target.value)}
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                }}
                 onBlur={handleBlur}
               />
             )}
