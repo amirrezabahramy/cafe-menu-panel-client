@@ -26,13 +26,28 @@ const AuthLoginLayout = lazy(() => import("@/layouts/auth/login"));
 
 // Admin
 const AdminLayout = lazy(() => import("@/layouts/admin"));
-const AdminFoodLayout = lazy(() => import("@/layouts/admin/food"));
-const AdminHotDrinksLayout = lazy(() => import("@/layouts/admin/hot-drinks"));
-const AdminColdDrinksLayout = lazy(() => import("@/layouts/admin/cold-drinks"));
-const AdminReviewsLayout = lazy(() => import("@/layouts/admin/reviews"));
+const AdminFoodLayout = lazy(() => import("@/layouts/admin/outlets/food"));
+const AdminHotDrinksLayout = lazy(
+  () => import("@/layouts/admin/outlets/hot-drinks")
+);
+const AdminColdDrinksLayout = lazy(
+  () => import("@/layouts/admin/outlets/cold-drinks")
+);
+const AdminReviewsLayout = lazy(
+  () => import("@/layouts/admin/outlets/reviews")
+);
 
 // Customer
 const CustomerLayout = lazy(() => import("@/layouts/customer"));
+const CustomerFoodLayout = lazy(
+  () => import("@/layouts/customer/outlets/food")
+);
+const CustomerHotDrinksLayout = lazy(
+  () => import("@/layouts/customer/outlets/hot-drinks")
+);
+const CustomerColdDrinksLayout = lazy(
+  () => import("@/layouts/customer/outlets/cold-drinks")
+);
 /*** Layouts ***/
 
 /*** Redirect Fn ***/
@@ -40,8 +55,12 @@ const redirectFn: TRedirectFn = async ({ location }) => {
   const loggedInUser = JSON.parse(
     typedLocalStorage.getItem("loggedInUser") || "null"
   );
-  if (!loggedInUser && location.href !== "/auth/login") {
-    return redirect({ to: "/auth/login" });
+  if (
+    !loggedInUser &&
+    !location.href.startsWith("/customer") &&
+    location.href !== "/auth/login"
+  ) {
+    return redirect({ to: "/customer/food" });
   } else if (
     loggedInUser &&
     !location.href.startsWith(`/${loggedInUser.role}`)
@@ -113,6 +132,24 @@ const customerRoute = new Route({
   component: CustomerLayout,
 });
 
+const customerFoodRoute = new Route({
+  getParentRoute: () => customerRoute,
+  path: "food",
+  component: CustomerFoodLayout,
+});
+
+const customerHotDrinksRoute = new Route({
+  getParentRoute: () => customerRoute,
+  path: "hot-drinks",
+  component: CustomerHotDrinksLayout,
+});
+
+const customerColdDrinksRoute = new Route({
+  getParentRoute: () => customerRoute,
+  path: "cold-drinks",
+  component: CustomerColdDrinksLayout,
+});
+
 // Not found
 const notFoundRoute = new NotFoundRoute({
   getParentRoute: () => rootRoute,
@@ -127,7 +164,11 @@ const routeTree = rootRoute.addChildren([
     adminColdDrinksRoute,
     adminReviewsRoute,
   ]),
-  customerRoute,
+  customerRoute.addChildren([
+    customerFoodRoute,
+    customerHotDrinksRoute,
+    customerColdDrinksRoute,
+  ]),
   notFoundRoute,
 ]);
 
