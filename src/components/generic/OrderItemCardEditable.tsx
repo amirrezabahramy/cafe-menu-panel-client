@@ -52,7 +52,7 @@ function OrderItemCardEditable({
       const updatedItem = {
         _id,
         ...value,
-        price: parseFloat(value.price),
+        price: parseInt(value.price),
       };
       console.log(updatedItem);
       await onUpdate(updatedItem, {
