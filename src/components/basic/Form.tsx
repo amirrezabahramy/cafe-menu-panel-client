@@ -11,13 +11,14 @@ type TProps = Omit<
 function Form({ onSubmit, ...rest }: TProps) {
   return (
     <form
+      noValidate
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
         onSubmit();
       }}
       {...rest}
-    ></form>
+    />
   );
 }
 
