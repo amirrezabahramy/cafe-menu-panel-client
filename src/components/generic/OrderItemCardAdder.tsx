@@ -68,7 +68,6 @@ function OrderItemCardAdder({ onAdd }: TProps) {
         image: orderItemImage,
         price: parseInt(value.price),
       };
-      console.log(addedItem);
       await onAdd(addedItem, {
         onSuccess: clearFields,
       });
@@ -95,10 +94,6 @@ function OrderItemCardAdder({ onAdd }: TProps) {
     setOrderItemImageErrors([]);
     clear();
   };
-
-  useEffect(() => {
-    console.log(orderItemImageErrors);
-  }, [orderItemImageErrors]);
 
   return (
     <Provider>
@@ -271,7 +266,7 @@ function OrderItemCardAdder({ onAdd }: TProps) {
               <>
                 <LoadingButton
                   size="small"
-                  disabled={!canSubmit}
+                  disabled={!canSubmit || isSubmitting}
                   type="submit"
                   variant="contained"
                   loading={isSubmitting}
