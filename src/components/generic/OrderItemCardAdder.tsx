@@ -16,7 +16,7 @@ import { useForm } from "@tanstack/react-form";
 import Form from "../basic/Form";
 import { LoadingButton } from "@mui/lab";
 import { TAddOrderItemMutate } from "@/types/queries/order-item";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFilePicker } from "use-file-picker";
 import {
   FileSizeValidator,

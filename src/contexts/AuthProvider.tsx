@@ -1,7 +1,6 @@
 import { removeHeader, setHeader } from "@/services/api";
 import { TUser } from "@/types/models";
 import { typedLocalStorage } from "@/utils/helpers/typed-local-storage";
-import { useNavigate } from "@tanstack/react-router";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useState } from "react";
 
