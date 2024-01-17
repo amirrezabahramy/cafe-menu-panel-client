@@ -26,7 +26,7 @@ function Navbar() {
       position="fixed"
       sx={{
         bgcolor: colorByMode(),
-        width: { md: `calc(100% - ${sidebarWidth + 12}px)` },
+        width: { md: `calc(100% - ${sidebarWidth}px)` },
         borderBottom: "1px solid",
         borderColor:
           mode === "light"
