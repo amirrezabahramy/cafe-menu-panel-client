@@ -57,13 +57,13 @@ const redirectFn: TRedirectFn = async ({ location }) => {
   );
   if (
     !loggedInUser &&
-    !location.href.startsWith("/customer") &&
-    location.href !== "/auth/login"
+    !location.pathname.startsWith("/customer") &&
+    location.pathname !== "/auth/login"
   ) {
     return redirect({ to: "/customer/food" });
   } else if (
     loggedInUser &&
-    !location.href.startsWith(`/${loggedInUser.role}`)
+    !location.pathname.startsWith(`/${loggedInUser.role}`)
   ) {
     return redirect({ to: `/${loggedInUser.role as "admin" | "customer"}` });
   }
