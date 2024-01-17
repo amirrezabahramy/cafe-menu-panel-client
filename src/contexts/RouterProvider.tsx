@@ -56,9 +56,9 @@ const redirectFn: TRedirectFn = async ({ location }) => {
     typedLocalStorage.getItem("loggedInUser") || "null"
   );
   if (
-    !loggedInUser &&
-    !location.pathname.startsWith("/customer") &&
-    location.pathname !== "/auth/login"
+    !loggedInUser?.role &&
+    location.pathname !== "/auth/login" &&
+    location.pathname !== "/customer/food"
   ) {
     return redirect({ to: "/customer/food" });
   } else if (
