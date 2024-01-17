@@ -30,19 +30,19 @@ function Sidebar({ items }: TProps) {
   const { triggerManual } = useSnackbar();
   const { loggedInUser, logoutUser } = useAuth();
   const { colorByMode } = useTheme();
-  if (items[0].route) {
-  }
+
   const drawer = useMemo(
     () => (
       <>
         <Toolbar>
           <Avatar sx={{ mr: 1.25 }} />
-          {loggedInUser && (
-            <Typography>
-              {loggedInUser?.firstName} {loggedInUser?.lastName} -{" "}
-              {roles[loggedInUser?.role]}
-            </Typography>
-          )}
+          <Typography>
+            {loggedInUser
+              ? `${loggedInUser?.firstName} ${loggedInUser?.lastName} - ${
+                  roles[loggedInUser?.role]
+                }`
+              : "کاربر مهمان"}
+          </Typography>
         </Toolbar>
         <Divider />
         <List
