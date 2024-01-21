@@ -2,13 +2,15 @@ type TBaseModel = {
   _id: string;
 };
 
+export type TUserRole = "admin";
+
 export type TUser = {
   firstName: string;
   lastName: string;
   username: string;
   password: string;
   email: string;
-  role: "admin" | "customer";
+  role: TUserRole;
 } & TBaseModel;
 
 export type TOrderItem = {
