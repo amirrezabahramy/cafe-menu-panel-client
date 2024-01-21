@@ -9,7 +9,7 @@ type TProps = {
   children: React.ReactNode;
 };
 
-type TLoggedInUser =
+export type TLoggedInUser =
   | (TUser & {
       exp: number;
       iat: number;
