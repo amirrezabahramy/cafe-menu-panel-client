@@ -13,11 +13,18 @@ import {
   ParsedLocation,
   NotFoundRoute,
 } from "@tanstack/react-router";
-import { useAuth } from "./AuthProvider";
+import { TLoggedInUser, useAuth } from "./AuthProvider";
 import { useEffect } from "react";
 
 // Types
-type TRedirectFn = ({ location }: { location: ParsedLocation<{}> }) => any;
+type TBeforeLoad = ({ location }: { location: ParsedLocation<{}> }) => any;
+
+// Valid sub routes
+const validSubRoutes = {
+  auth: ["login"],
+  admin: ["food", "hot-drinks", "cold-drinks", "reviews"],
+  customer: ["food", "hot-drinks", "cold-drinks"],
+};
 
 /*** Layouts ***/
 // Auth
@@ -50,30 +57,40 @@ const CustomerColdDrinksLayout = lazy(
 );
 /*** Layouts ***/
 
-/*** Redirect Fn ***/
-const redirectFn: TRedirectFn = async ({ location }) => {
-  const loggedInUser = JSON.parse(
+/*** Before load Function ***/
+const beforeLoad: TBeforeLoad = async ({ location }) => {
+  const loggedInUser: TLoggedInUser = JSON.parse(
     typedLocalStorage.getItem("loggedInUser") || "null"
   );
-  if (
-    !loggedInUser?.role &&
-    location.pathname !== "/auth/login" &&
-    location.pathname !== "/customer/food"
-  ) {
-    return redirect({ to: "/customer/food" });
-  } else if (
-    loggedInUser &&
-    !location.pathname.startsWith(`/${loggedInUser.role}`)
-  ) {
-    return redirect({ to: `/${loggedInUser.role as "admin" | "customer"}` });
+
+  const isAuthRoute = location.pathname.startsWith("/auth");
+
+  const redirectWithSubRoutes = (superRoute: "auth" | "admin" | "customer") => {
+    const subRoutes = location.pathname.substring(superRoute.length + 2);
+    const defaultRouteToRedirect = `/${superRoute}/${validSubRoutes[superRoute][0]}`;
+
+    const isPathnameValid = validSubRoutes[superRoute].includes(subRoutes);
+
+    if (!isPathnameValid) {
+      return redirect({ to: defaultRouteToRedirect, replace: true });
+    }
+  };
+
+  if (!!loggedInUser) {
+    return redirectWithSubRoutes(loggedInUser.role);
+  } else {
+    if (isAuthRoute) {
+      return redirectWithSubRoutes("auth");
+    }
+    return redirectWithSubRoutes("customer");
   }
 };
-/*** Redirect Fn ***/
+/*** Redirect Functions ***/
 
 /*** Routes ***/
 // Root
 const rootRoute = new RootRoute({
-  beforeLoad: redirectFn,
+  beforeLoad,
   component: () => (
     <>
       <Outlet />
@@ -189,17 +206,9 @@ declare module "@tanstack/react-router" {
 // Provider
 function RouterProvider() {
   const { loggedInUser } = useAuth();
-  const { navigate } = router;
 
   useEffect(() => {
-    const properNavigate = () => {
-      if (!loggedInUser) {
-        navigate({ to: "/auth/login" });
-      } else {
-        navigate({ to: `/${loggedInUser.role}` });
-      }
-    };
-    properNavigate();
+    router.invalidate();
   }, [loggedInUser]);
 
   return <TanstackRouterProvider router={router} />;
